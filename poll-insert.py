@@ -3,7 +3,6 @@ import bluepy.btle
 from miot_encode import *
 from influxdb import InfluxDBClient
 from struct import unpack
-import datetime
 import sys
 import time
 from config import *
@@ -65,7 +64,7 @@ class myDelegate(bluepy.btle.DefaultDelegate):
 				timer, temp, light, moisture, conductivity = unpack('<LhxIBhxx',line)
 				temp = temp/10.0
 				timer -= starttimer
-				ts = datetime.datetime.fromtimestamp(now+timer).strftime('%Y-%m-%dT%H:%M:%SZ')
+				ts = datetime.fromtimestamp(now+timer).strftime('%Y-%m-%dT%H:%M:%SZ')
 				# append json
 				json_body.append(
 				{
@@ -126,7 +125,7 @@ for hostname in to_scan:
 		# enable notifications on handle 0x3e
 		device.writeCharacteristic(0x3f,bytes([0x01, 0x00]),True)
 		# sync clocks - note local time and read device timer 
-		now = datetime.datetime.utcnow().timestamp()
+		now = datetime.utcnow().timestamp()
 		timer = device.readCharacteristic(0x41)
 		starttimer = unpack('<L', timer)[0]
 		# get hours count command - result is read in notification handler
