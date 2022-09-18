@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import bluepy.btle
 from miot_encode import *
-from influxdb import InfluxDBClient
 from struct import unpack
 import sys
 import time
@@ -9,11 +8,10 @@ from config import *
 
 from datetime import datetime
 
-from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 #globals
-# dbclient = InfluxDBClient(*influx_args)
 dbclient = InfluxDBClient(url=influx_url, token=influx_token)
 write_api = dbclient.write_api(write_options=SYNCHRONOUS)
 json_body = []
@@ -142,7 +140,7 @@ for hostname in to_scan:
 				# read reply in the notification handler
 				waitForANotification(device,0x3e,5)
 			# dbclient.write_points(json_body)
-			write_api.write(bucket=influx_bucket, record=json_body)
+			write_api.write(bucket=influx_bucket, org=influx_org, record=json_body)
 			# disable notifications on handle 0x3e
 			device.writeCharacteristic(0x3f,bytes([0x00, 0x00]),True)
 			# reset hourly data storage

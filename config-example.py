@@ -6,8 +6,7 @@ devices ={
 
 to_scan = ["A","B"]
 
-influx_args=('localhost', 8086, 'root', 'pass', 'plant_monitors')
-
 influx_url = ''
 influx_token = ''
+influx_org = ''
 influx_bucket = ''
